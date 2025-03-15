@@ -62,7 +62,7 @@ const DynamicInputList: React.FC<DynamicInputListProps> = ({
               aria-label="Delete"
               type="button"
             >
-              <Trash className="h-4 w-4 text-red-400" />
+              <Trash className="h- w-4 text-[#ff4848] text-sm" />
             </Button>
           </div>
         ))}

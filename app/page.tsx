@@ -6,6 +6,11 @@ import InputGroupComponent from "@/components/InputGroupComponent";
 import { Button } from "@/components/ui/button";
 import ReusableCheckbox from "@/components/ReusableCheckbox";
 import CheckboxGroup from "@/components/CheckboxGroup";
+import SidebarNav from "@/components/SidebarNav";
+import { Home, Info, Settings } from "lucide-react";
+import SkeletonImage from "@/components/SkeletonImage";
+import SkeletonLoading from "@/components/SkeletonLoading";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const page = () => {
   const [values, setValues] = useState<(string | number | null)[]>([]);
@@ -22,9 +27,38 @@ const page = () => {
     { value: "js", text: "JavaScript" },
   ];
 
+  const menus = [
+    {
+      name: "home",
+      path: "/",
+      meta: { title: "Home", icon: Home },
+    },
+    {
+      name: "about",
+      path: "/about",
+      meta: { title: "About", icon: Info },
+    },
+    {
+      name: "services",
+      meta: { title: "Services", icon: Settings },
+      children: [
+        {
+          name: "web-development",
+          path: "/services/web-development",
+          meta: { title: "Web Development" },
+        },
+        {
+          name: "mobile-development",
+          path: "/services/mobile-development",
+          meta: { title: "Mobile Development" },
+        },
+      ],
+    },
+  ];
+
   return (
     <div className="py-10 max-w-[30rem] mx-auto">
-      <h1 className="text-xl text-[#109379] md:text-3xl text-center my-6 font-black">
+      <h1 className="text-xl text-[#01211a] md:text-3xl text-center mb-10 font-black">
         Reusable Components..
       </h1>
 
@@ -111,6 +145,17 @@ const page = () => {
         onChange={setSelectedValues}
         name="example-checkbox-group"
       />
+
+      <h1 className="text-xl font-black my-4">Sidebar Nav</h1>
+      <SidebarNav menus={menus} vertical />
+
+      <h1 className="text-xl font-black my-4">Image Skeleton</h1>
+      <SkeletonImage width={200} height={100} animation="pulse">
+        <img src="/girlOnHeadPhone.jpg" alt="Girl " />
+      </SkeletonImage>
+
+      <h1 className="text-xl font-black my-4">Paragraph Skeleton</h1>
+      <SkeletonLoading count={5} width="80%" />
     </div>
   );
 };

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bilding Blockc Component",
+  title: "Building Blocks Component",
   description: "Created in next app",
 };
 
