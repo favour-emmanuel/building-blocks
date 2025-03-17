@@ -11,6 +11,8 @@ import { Home, Info, Settings } from "lucide-react";
 import SkeletonImage from "@/components/SkeletonImage";
 import SkeletonLoading from "@/components/SkeletonLoading";
 import { Skeleton } from "@/components/ui/skeleton";
+import EllipsisText from "@/components/EllipsisText";
+import { Tooltip } from "@radix-ui/react-tooltip";
 
 const page = () => {
   const [values, setValues] = useState<(string | number | null)[]>([]);
@@ -61,22 +63,18 @@ const page = () => {
       <h1 className="text-xl text-[#01211a] md:text-3xl text-center mb-10 font-black">
         Reusable Components..
       </h1>
-
       <h1 className="text-2xl font-black my-4">Default Input</h1>
-
       <InputGroupComponent
         type="text"
         text="Enter your name:"
         placeHolder="Enter name.."
       />
-
       <InputGroupComponent
         type="password"
         text="Enter your name:"
         maskable={true}
         placeHolder="******"
       />
-
       <InputGroupComponent
         type="text"
         prepend="$"
@@ -84,22 +82,18 @@ const page = () => {
         text="Enter your email"
         placeHolder="youremail@gmail.com"
       />
-
       <InputGroupComponent
         type="text"
         appendComponent={<Button className="bg-[#FC6401]">Enter</Button>}
         text="Enter a code:"
       />
-
       <h1 className="text-2xl font-black my-4">Multi-field Input</h1>
-
       <DynamicInputList
         value={values}
         onChange={setValues}
         fieldAttrs={{ label: "Item", placeholder: "Enter an item" }}
         addButtonText="Add Item"
       />
-
       <DynamicInputList
         value={emails}
         onChange={setEmails}
@@ -110,7 +104,6 @@ const page = () => {
         }}
         addButtonText="Add Email"
       />
-
       <DynamicInputList
         value={numbers}
         onChange={setNumbers}
@@ -121,9 +114,7 @@ const page = () => {
         }}
         addButtonText="Add Number"
       />
-
       <h1 className="text-xl font-black my-4">CheckBox </h1>
-
       <ReusableCheckbox
         name="Enable Feature"
         value={isChecked}
@@ -145,17 +136,18 @@ const page = () => {
         onChange={setSelectedValues}
         name="example-checkbox-group"
       />
-
       <h1 className="text-xl font-black my-4">Sidebar Nav</h1>
       <SidebarNav menus={menus} vertical />
-
       <h1 className="text-xl font-black my-4">Image Skeleton</h1>
       <SkeletonImage width={200} height={100} animation="pulse">
         <img src="/girlOnHeadPhone.jpg" alt="Girl " />
       </SkeletonImage>
-
       <h1 className="text-xl font-black my-4">Paragraph Skeleton</h1>
       <SkeletonLoading count={5} width="80%" />
+      <h1 className="text-xl font-black my-8">Ellipsis Text </h1>
+      <div style={{ width: "150px" }}>
+        <EllipsisText text="This is a very long text that will be truncated" />
+      </div>{" "}
     </div>
   );
 };
