@@ -1,18 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import DynamicInputList from "@/components/DynamicInputList";
-import InputGroupComponent from "@/components/InputGroupComponent";
-import { Button } from "@/components/ui/button";
-import ReusableCheckbox from "@/components/ReusableCheckbox";
 import CheckboxGroup from "@/components/CheckboxGroup";
+import DynamicInputList from "@/components/DynamicInputList";
+import EllipsisText from "@/components/EllipsisText";
+import ExternalLinkComponent from "@/components/ExternalLinkComponent";
+import IconText from "@/components/IconText";
+import InputGroupComponent from "@/components/InputGroupComponent";
+import ReusableCheckbox from "@/components/ReusableCheckbox";
 import SidebarNav from "@/components/SidebarNav";
-import { Home, Info, Settings } from "lucide-react";
 import SkeletonImage from "@/components/SkeletonImage";
 import SkeletonLoading from "@/components/SkeletonLoading";
-import { Skeleton } from "@/components/ui/skeleton";
-import EllipsisText from "@/components/EllipsisText";
-import { Tooltip } from "@radix-ui/react-tooltip";
+import { Button } from "@/components/ui/button";
+import { Home, Info, Settings } from "lucide-react";
+import { CheckCircle, AlertCircle } from "lucide-react";
 
 const page = () => {
   const [values, setValues] = useState<(string | number | null)[]>([]);
@@ -148,6 +149,15 @@ const page = () => {
       <div style={{ width: "150px" }}>
         <EllipsisText text="This is a very long text that will be truncated" />
       </div>{" "}
+      <h1 className="text-xl font-black my-4">External Link </h1>
+      <ExternalLinkComponent url="https://example.com">
+        Visit example
+      </ExternalLinkComponent>
+      <h1 className="text-xl font-black my-4">Text Icon </h1>
+      <div>
+        <IconText icon={CheckCircle} text="Task completed" />
+        <IconText icon={AlertCircle} text="Error occurred" />
+      </div>
     </div>
   );
 };
