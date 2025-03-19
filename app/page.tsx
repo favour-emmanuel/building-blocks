@@ -14,6 +14,12 @@ import SkeletonLoading from "@/components/SkeletonLoading";
 import { Button } from "@/components/ui/button";
 import { Home, Info, Settings } from "lucide-react";
 import { CheckCircle, AlertCircle } from "lucide-react";
+import ImageComponent from "@/components/ImageComponent";
+import StackedImages from "@/components/StackedImages";
+import Panel from "@/components/Panel";
+import ChartComponent from "@/components/ChartComponent";
+import FilterPanel from "@/components/FilterPanel";
+import TableLayout from "@/components/TableLayout";
 
 const page = () => {
   const [values, setValues] = useState<(string | number | null)[]>([]);
@@ -59,8 +65,60 @@ const page = () => {
     },
   ];
 
+  const files = [
+    { url: "/r1.jpg" },
+    { url: "/r2.jpg" },
+    { url: "/r3.jpg" },
+    { url: "/r4.jpg" },
+  ];
+
+  // for chart
+  const series = [
+    {
+      name: "Series 1",
+      data: [30, 40, 35, 50, 49, 60, 70, 91, 125],
+    },
+  ];
+
+  const xAxis = {
+    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+  };
+
+  // for filterPanel
+  const [filters, setFilters] = useState<{
+    dates: [Date, Date];
+    duration: string;
+  }>({
+    dates: [new Date(), new Date()],
+    duration: "7d",
+  });
+
+  const resetFilter = () => {
+    setFilters({
+      dates: [new Date(), new Date()],
+      duration: "7d",
+    });
+  };
+
+  const handleFilter = (filters: { dates: [Date, Date]; duration: string }) => {
+    console.log("Filters applied:", filters);
+  };
+
+  // for table layout
+  const store = {
+    getComponents: (key: string) => {
+      return [];
+    },
+    applyFilter: () => console.log("Filters applied"),
+    refresh: () => console.log("Table refreshed"),
+    clearErrors: () => console.log("Errors cleared"),
+    addFilter: (query: object) => console.log("Filter added:", query),
+    busy: false,
+    canTakeBulkAction: true,
+  };
+
   return (
-    <div className="py-10 max-w-[30rem] mx-auto">
+    <div className="py-10 max-w-[43rem] mx-auto">
       <h1 className="text-xl text-[#01211a] md:text-3xl text-center mb-10 font-black">
         Reusable Components..
       </h1>
@@ -72,7 +130,7 @@ const page = () => {
       />
       <InputGroupComponent
         type="password"
-        text="Enter your name:"
+        text="Enter your password:"
         maskable={true}
         placeHolder="******"
       />
@@ -157,6 +215,54 @@ const page = () => {
       <div>
         <IconText icon={CheckCircle} text="Task completed" />
         <IconText icon={AlertCircle} text="Error occurred" />
+      </div>
+      <h1 className="text-xl font-black my-4">Image Icon </h1>
+      <ImageComponent
+        src="/r2.jpg"
+        alt="Example Image"
+        width={200}
+        height={200}
+      />
+      {/* Lazy-loaded image */}
+      <ImageComponent
+        src="/r6.jpg"
+        alt="Lazy Loaded Image"
+        width={200}
+        height={200}
+        lazy
+      />
+      <h1 className="text-xl font-black my-4">Stacked Image Icon </h1>
+      <StackedImages files={files} maxDisplay={3} />
+      <h1 className="text-xl font-black my-4">Panel </h1>
+      <Panel title="Example Panel" titleIcon="Settings" shadow padding={3}>
+        <p>This is the content of the panel.</p>
+      </Panel>
+      <h1 className="text-xl font-black my-4">Chart</h1>
+      <div>
+        <ChartComponent
+          title="Example Chart"
+          series={series}
+          xAxis={xAxis}
+          type="line"
+          height={350}
+          shadow
+          showDataLabel
+        />
+      </div>
+      <h1 className="text-xl font-black my-4">Filter</h1>
+      <div>
+        <FilterPanel
+          store={{ filters, resetFilter, setFilters }}
+          onFilter={handleFilter}
+        />
+      </div>
+      <h1 className="text-xl font-black my-4">Table Layout</h1>
+      <div>
+        <TableLayout
+          store={store}
+          layoutAttrs={{ title: "Example Table", icon: "📊" }}
+          tableAttrs={{ striped: true }}
+        />
       </div>
     </div>
   );
