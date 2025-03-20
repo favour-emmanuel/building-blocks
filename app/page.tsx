@@ -20,6 +20,7 @@ import Panel from "@/components/Panel";
 import ChartComponent from "@/components/ChartComponent";
 import FilterPanel from "@/components/FilterPanel";
 import TableLayout from "@/components/TableLayout";
+import type { Store } from "@/components/TableLayout";
 
 const page = () => {
   const [values, setValues] = useState<(string | number | null)[]>([]);
@@ -105,14 +106,31 @@ const page = () => {
   };
 
   // for table layout
-  const store = {
-    getComponents: (key: string) => {
-      return [];
+  const store: Store = {
+    getComponents: (key) => {
+      const components: Record<
+        "TableFields" | "TableSlots" | "BeforeTable" | "TableActions",
+        (React.ReactNode | string)[]
+      > = {
+        TableFields: ["Name", "Email", "Status"],
+
+        TableSlots: [
+          <td key="name">John Doe</td>,
+          <td key="email">johndoe@example.com</td>,
+          <td key="status">Active</td>,
+        ],
+
+        BeforeTable: [<div key="before">Before Table Content</div>],
+
+        TableActions: [<button key="action">Add New</button>],
+      };
+
+      return components[key] || [];
     },
     applyFilter: () => console.log("Filters applied"),
     refresh: () => console.log("Table refreshed"),
     clearErrors: () => console.log("Errors cleared"),
-    addFilter: (query: object) => console.log("Filter added:", query),
+    addFilter: (query) => console.log("Filter added:", query),
     busy: false,
     canTakeBulkAction: true,
   };

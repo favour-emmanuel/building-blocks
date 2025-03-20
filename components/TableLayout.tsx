@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { Card } from "@/components/ui/card";
@@ -13,8 +13,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-interface Store {
-  getComponents: (key: string) => (React.ElementType | null)[];
+export interface Store {
+  getComponents: (
+    key: "TableFields" | "TableSlots" | "BeforeTable" | "TableActions"
+  ) => (React.ReactNode | string)[];
   applyFilter: () => void;
   refresh: () => void;
   clearErrors: () => void;
@@ -36,6 +38,10 @@ interface TableLayoutProps {
   modalAttrs?: object;
   autoLoad?: boolean;
   watch?: boolean;
+}
+
+interface SlotComponentProps {
+  data?: any; // Adjust type if needed
 }
 
 const TableLayout: React.FC<TableLayoutProps> = ({
@@ -79,13 +85,17 @@ const TableLayout: React.FC<TableLayoutProps> = ({
     }
   }, [watch, pathname, searchParams, store]);
 
+  console.log("All Store Components:", store);
+
   return (
     <div className="space-y-4">
+      {/* BeforeTable Components */}
       {store
         .getComponents("BeforeTable")
-        ?.map(
-          (Component, index) =>
-            Component && <div key={index}>{<Component />}</div>
+        ?.map((Component, index) =>
+          Component && typeof Component !== "string" ? (
+            <div key={index}>{Component}</div>
+          ) : null
         )}
 
       <Card className="p-6 shadow-md" {...layoutAttrs}>
@@ -96,30 +106,28 @@ const TableLayout: React.FC<TableLayoutProps> = ({
           {layoutAttrs.icon && <span>{layoutAttrs.icon}</span>}
         </div>
 
+        {/* Table Actions */}
         {store.getComponents("TableActions")?.length > 0 && (
           <div className="flex space-x-2 my-4">
             {store
               .getComponents("TableActions")
-              .map(
-                (Component, index) =>
-                  Component && <div key={index}>{<Component />}</div>
+              .map((Component, index) =>
+                Component && typeof Component !== "string" ? (
+                  <div key={index}>{Component}</div>
+                ) : null
               )}
           </div>
         )}
 
+        {/* Table */}
         <Table
-          //   {...tableAttrs}
-          className={`w-full ${tableAttrs?.striped ? "even:bg-gray-50" : ""}`}
+          className={`w-full ${tableAttrs.striped ? "even:bg-gray-50" : ""}`}
         >
           <thead>
             <tr>
               {store.getComponents("TableFields")?.map((Field, index) => (
                 <th key={index} className="text-left py-2">
-                  {typeof Field === "string" ? (
-                    Field
-                  ) : Field && typeof Field === "function" ? (
-                    <Field />
-                  ) : null}
+                  {React.isValidElement(Field) ? Field : null}
                 </th>
               ))}
             </tr>
@@ -127,15 +135,21 @@ const TableLayout: React.FC<TableLayoutProps> = ({
 
           <tbody>
             {store.getComponents("TableSlots")?.map((SlotComponent, index) => {
-              if (!SlotComponent) return null;
-              const Component = SlotComponent as React.ElementType;
+              if (!SlotComponent || typeof SlotComponent === "string")
+                return null;
               return (
                 <tr
                   key={index}
-                  onClick={() => handleRowClick((Component as any).props?.data)}
+                  onClick={() => {
+                    if (
+                      React.isValidElement<SlotComponentProps>(SlotComponent)
+                    ) {
+                      handleRowClick(SlotComponent.props.data);
+                    }
+                  }}
                   className="cursor-pointer hover:bg-gray-100"
                 >
-                  <Component store={store} />
+                  {SlotComponent}
                 </tr>
               );
             })}
@@ -143,6 +157,7 @@ const TableLayout: React.FC<TableLayoutProps> = ({
         </Table>
       </Card>
 
+      {/* Modal Dialog */}
       <Dialog open={isModalOpen} onOpenChange={closeModal}>
         <DialogContent>
           <DialogHeader>
